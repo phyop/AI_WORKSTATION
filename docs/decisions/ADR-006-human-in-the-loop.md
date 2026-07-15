@@ -1,5 +1,9 @@
-# ADR-006: Human in the Loop
+# ADR-006: Keep Humans in the Approval Loop
 
-Status: Accepted
+## Decision
 
-公開服務、權限變更、憑證操作、破壞性系統命令與正式分支 Push 需由人員明確確認；Agent 可準備變更與驗證結果。
+Administrative elevation, account changes, firewall exposure, GitHub visibility changes, and public publishing require explicit human approval.
+
+## Rationale
+
+Automation can prepare and validate changes, but humans remain responsible for risky side effects and credentials.

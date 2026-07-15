@@ -1,15 +1,22 @@
 # Architecture
 
-## V1 邊界
+The workstation is designed around separated trust boundaries.
 
-手機 SSH Client → VPN Overlay → AI Workstation SSH Server → 隔離的 Git repositories。
+```mermaid
+flowchart LR
+  Remote[Remote operator] --> PrivateNetwork[VPN or private network]
+  PrivateNetwork --> SSH[OpenSSH on workstation]
+  SSH --> StandardUser[Standard development user]
+  StandardUser --> DevTools[Git, Python, Codex, editors]
+  AdminUser[Administrator user] --> SystemChanges[Installers, services, recovery]
+  Repo[GitHub repository] --> Documentation[Scripts, ADRs, validation notes]
+  SecretStore[Secret manager] -. not committed .-> SSH
+```
 
-禁止從 Internet 直接開放 SSH Port。主機設定由 repository 中的範本與 bootstrap 腳本重建；實際金鑰、Token、密碼與環境憑證由 1Password 或等價的受控祕密管理工具保存。
+## Boundaries
 
-## 目錄責任
-
-- `bootstrap/`：各平台可重複執行的安裝入口
-- `configs/`：不含 Secret 的設定範本
-- `scripts/`：日常操作與驗證工具
-- `tests/`：自動化驗收
-- `docs/`：建置、操作、故障排除、安全及 ADR
+- The standard user performs normal development and agent work.
+- The administrator user is reserved for installation, recovery, and controlled system changes.
+- Secrets are stored outside Git.
+- Public documentation uses placeholders for host, account, path, and network identifiers.
+- Remote access should be protected by a VPN or private overlay before SSH is reachable from outside the local machine.

@@ -1,72 +1,124 @@
-# 我如何把一台 Windows 筆電，逐步變成安全的 AI 工程工作站
+# Building a Secure Windows AI Workstation with Git, OpenSSH, and Human Approval Gates
 
-> 本文刻意移除使用者名稱、電腦名稱、本機路徑、IP、Email、SSH alias、主機指紋與原始診斷 Log。文中的 `<host>`、`<standard-user>`、`<project-root>` 均為中性代稱。
+## Title options
 
-## 五個標題候選
+1. Building a Secure Windows AI Workstation with Git, OpenSSH, and Human Approval Gates
+2. From Laptop to AI Workstation: A Privacy-Safe Windows Engineering Setup
+3. OpenSSH, DISM, and Git: Building a Remote AI Engineering Workstation Safely
+4. Why an AI Workstation Needs Security Gates Before Remote Access
+5. Turning a Windows Laptop into a Reproducible AI Engineering Environment
 
-1. 我如何把 Windows 筆電逐步變成安全的 AI 工程工作站
-2. 從一份 Markdown 計畫，到可稽核的 OpenSSH AI 工作站
-3. OpenSSH 安裝卡住十分鐘：一次 Windows DISM／CBS 實戰
-4. AI 協作不是全自動：建立遠端工程工作站的安全閘門
-5. 用 Git、ADR 與可重複腳本打造 Windows AI Workstation
+## The starting point
 
-## 起點：我需要的不是「裝幾個工具」
+The project began with a simple goal: make a Windows laptop usable as a remote AI engineering workstation. At first glance, that sounds like a tooling checklist. Install Git, install Python, enable OpenSSH, add an editor, and connect from another device.
 
-這個專案一開始只有兩份規劃文件。目標看似簡單：讓一台 Windows 筆電可從手機遠端進入，執行 Git、Python 與 Codex。但只要把「長時間在線」「遠端登入」「AI Agent 可操作檔案」放在一起，問題就不再只是安裝軟體，而是權限、憑證、網路邊界、復原能力與稽核責任。
+That would have been the fast path. It also would have been the wrong path.
 
-因此第一個決定不是開 Port 22，而是先把所有工作納入受控 Git repository，以 Git 作為非敏感設定與文件的唯一真實來源。完成隱私清理與雙重驗證後，原始工程歷史保留在 private archive，另以乾淨歷史發布 public repository。公開版本包含 README、架構、安全基線、Roadmap、威脅模型、八份 ADR、平台分離的 bootstrap 目錄，以及可自動驗證 Secret 測試檔確實被忽略的 PowerShell 腳本。
+Remote access, long-running machines, AI agents, credentials, and administrative tools create a shared risk surface. A useful workstation is not just a machine that accepts commands from somewhere else. It is a system where the account boundary is clear, secrets stay out of Git, recovery remains possible, and every risky action leaves enough evidence to audit later.
 
-## Phase 0：先盤點，再碰系統設定
+So the first milestone was not opening port 22. It was building a repository that could explain the workstation safely.
 
-我們先以唯讀方式取得作業系統、CPU、記憶體、GPU、磁碟、網路、電源與時間服務狀態。公開文章只保留工程結論：這是一台資源足以作為工作站的 Windows 11 筆電；插電與電池模式都已設定為不自動睡眠；時區正確，但 Windows Time 最初只使用本機 CMOS Clock。
+## Making Git the source of truth
 
-時間同步是低風險、可驗證的 Phase 2 動作。Repository 新增一支需要 Administrator 的腳本，透過 UAC 設定 Windows Time，執行後確認來源、最後同步時間與無警告狀態。這也建立了後續慣例：系統變更必須有腳本、有人工批准、有執行後證據。
+The repository became the public source of truth for everything non-sensitive:
 
-## 最小權限：新增標準使用者，而不是把 Agent 交給管理員
+- architecture notes;
+- setup phases;
+- ADRs;
+- PowerShell bootstrap scripts;
+- threat model notes;
+- troubleshooting records;
+- validation scripts;
+- publication copy.
 
-下一步是建立專用的非管理員帳號 `<standard-user>`，日後只用於 SSH、Git、Python、Codex 與一般開發。原管理員帳號保留作安裝、維護與復原入口。
+The public version intentionally avoids real local values. Hostnames, account names, home paths, IP addresses, SSH aliases, host-key fingerprints, private keys, and raw logs are replaced with placeholders such as `<host>`, `<standard-user>`, `<project-root>`, and `<user-home>`.
 
-這段過程暴露了兩個實務陷阱。第一，密碼不應經過聊天、Shell history 或 Log，因此建立腳本只在本機 UAC PowerShell 中以 SecureString 讀取。第二，Windows 本機帳號欄位與本地化群組名稱都有相容性限制：過長的 Description 會讓建立失敗，而 `Users`／`Administrators` 應以 well-known SID 解析實際本機名稱。修正後，驗收確認帳號已啟用、密碼為必要、屬於標準 Users，且不屬於 Administrators。
+This mattered because public documentation is itself a product surface. A technically useful article can still be unsafe if it leaks enough details to identify the machine or account behind it.
 
-## OpenSSH：真正困難的是「安裝看似卡住」
+## Separating administrator work from agent work
 
-OpenSSH Server 的安全 rollout 採兩道閘門：先安裝 capability 與服務，但在 Public Key 驗證前保持入站防火牆關閉；等 Phase 4 完成金鑰後，再停用密碼登入並開放受限網路來源。
+The next design choice was least privilege.
 
-第一次 `Add-WindowsCapability` 長時間停在 Running。外部監控只看到 DISM 與 Windows servicing 程序，卻沒有 `sshd` 服務。唯讀檢查發現 CBS 有 pending reboot，因此先停止重複嘗試並重新開機。重啟後安裝仍一度超時，於是我們沒有盲目重跑，而是建立 DISM／CBS 診斷腳本，收集 capability、pending signals、服務、Windows Update source 與必要 Log 摘要。
+The workstation uses a standard development account for SSH, Git, Python, Codex, and normal engineering work. Administrator access is kept separate for installation, system recovery, service configuration, and other maintenance tasks.
 
-診斷中一度看到 Server 為 `NotPresent`，並考慮 Features on Demand 來源問題。為此建立了兩個工具：一個只讀取 FoD／Windows Update policy；另一個是帶 `-Approve` 與手動輸入 `YES` 的 Registry 修復腳本，而且明確不安裝 OpenSSH、不啟動服務、不改防火牆。
+That split gives AI agents a smaller operating boundary. They can help generate scripts, compare Git state, read diagnostics, and validate documentation. They should not receive blanket administrator power. Account creation, firewall changes, GitHub visibility changes, and public publishing remain human-approved actions.
 
-關鍵轉折是稍後再次診斷時，Server capability 已變成 `Installed`。也就是說，先前的 Windows servicing 並非永久失敗，而是延遲完成。此時正確動作不是套用假設中的 Registry 修復，而是取消它：設定 `sshd` 為 Automatic、啟動服務、關閉 OpenSSH 入站規則，並寫出稽核 JSON。
+Even the standard-user setup script reflects that model. It reads the initial password locally through a secure prompt instead of putting it in chat, shell history, or a command line.
 
-## 驗收：拒絕登入也是一種成功
+## Rolling out OpenSSH in phases
 
-最終本機驗證顯示：OpenSSH Server 已安裝、`sshd` 正在執行且會自動啟動、TCP 22 在本機回應、SSH protocol handshake 正常，而 BatchMode 登入回傳 `Permission denied`。在尚未放入 Public Key 的階段，這個拒絕正是預期安全結果；同時 Windows 防火牆阻擋外部入站，因此沒有提前暴露密碼登入面。
+OpenSSH Server was the most important capability, but it also needed the strongest gate.
 
-## AI 協作的真正價值
+The rollout strategy was:
 
-這不是「AI 全自動把電腦設定好」的故事。AI 負責拆解計畫、產生可重複腳本、掃描敏感資訊、比較 Git 分支、整理診斷假設與執行驗證；人類則批准 UAC、輸入只存在本機的密碼、決定是否重開機、確認是否合併到 main，以及阻止高風險捷徑。
+1. install the Windows capability;
+2. configure and start the service;
+3. verify local service and protocol behavior;
+4. keep inbound firewall exposure closed;
+5. add public-key authentication later;
+6. only then restrict password authentication and open access through a private network boundary.
 
-最重要的工程經驗有四點：
+The key idea is that "installed" and "safely reachable" are different states. A workstation can validate local SSH behavior before it exposes anything externally.
 
-1. 先建立安全邊界，再建立連線能力。
-2. Windows servicing 很慢時，timeout 不等於失敗；先讀狀態與 Log。
-3. 修復腳本也要有拒絕執行、人工確認與可逆說明。
-4. Git 的價值不只在保存程式碼，更在保存決策、驗收與失敗路徑。
+## When Windows servicing looked stuck
 
-## 下一步
+The hardest debugging moment came during OpenSSH installation. `Add-WindowsCapability` appeared to run for a long time without producing an `sshd` service. A tempting response would have been to rerun installation commands or start changing Windows Update policy immediately.
 
-Phase 4 將建立專用 SSH Key，Private Key 只進入受控的 Secret Manager，Git 僅保存 public metadata。金鑰在本機成功驗證後，才會停用 password authentication、限制可登入使用者並啟用受限的防火牆規則。之後再加入 VPN Overlay、手機 SSH Client、GitHub 驗證、Python 環境與 Codex CLI。
+Instead, the project paused and collected evidence.
 
-一台可靠的 AI 工作站，不是因為它能遠端執行命令，而是因為每個能力都有邊界、每次變更都有證據、每條失敗路徑都有復原方式。
+Read-only diagnostics checked the optional capability state, DISM and CBS signals, pending reboot indicators, service state, and update-source policy. The evidence suggested that Windows servicing had not necessarily failed; it might still be completing delayed work.
 
----
+That distinction changed the response. The project avoided stacking repair attempts on top of an uncertain servicing state. After a later check showed the OpenSSH Server capability installed, the right action was simple: configure `sshd`, start the service, keep the firewall closed, and record the result.
 
-GitHub：https://github.com/phyop/AI_WORKSTATION
+The lesson was blunt: a timeout is not a root cause. On Windows, servicing can be slow enough that patience and diagnostics are safer than repeated mutation.
 
-SEO title：Windows AI Workstation 實戰：用 Git、OpenSSH 與安全閘門建立遠端工程環境
+## Why a refused login was success
 
-Meta description：從隱私清理、最小權限帳號到 OpenSSH DISM/CBS 診斷，完整記錄如何以人工批准與可稽核腳本建立可公開重現的 Windows AI 工程工作站。
+One validation result looked negative at first: unauthenticated batch login returned `Permission denied`.
 
-URL slug：windows-ai-workstation-openssh-security-gates
+At that phase, it was exactly the desired result.
 
-Tags：Windows、OpenSSH、DevOps、AI Engineering、Cybersecurity
+The service was installed. Local TCP and SSH protocol behavior worked. The daemon responded. But no public key had been installed yet, and external inbound exposure remained closed. Refusing login proved that the workstation had not accidentally become a usable password-authenticated remote target.
+
+Security work often has this shape. The goal is not to make every operation succeed immediately. The goal is to make only the intended operation succeed at the intended phase.
+
+## The AI collaboration model
+
+This project was AI-assisted, but not autonomous.
+
+AI helped structure the roadmap, write privacy-safe documentation, generate PowerShell scripts, inspect Git state, compare branches, identify risky publication details, and summarize diagnostics. The human operator approved elevation, entered passwords locally, decided when to reboot, and controlled publication.
+
+That is the model I want for sensitive workstation automation: AI accelerates preparation and verification; humans retain authority over credentials and side effects.
+
+## Pitfalls to avoid
+
+- Do not publish real hostnames, account names, IP addresses, local paths, or SSH fingerprints.
+- Do not store private keys, tokens, cookies, or `.env` files in Git.
+- Do not run agents as administrator by default.
+- Do not expose SSH before key-based authentication and network boundaries are ready.
+- Do not treat a Windows servicing timeout as proof of failure.
+- Do not combine diagnostics, repair, firewall changes, and service changes in one unreviewed script.
+- Do not claim an AI workflow was fully autonomous when human approval was required.
+
+## What the repository demonstrates
+
+The public repository demonstrates a reusable pattern:
+
+- start with documentation and threat modeling;
+- make Git the source of truth for non-sensitive artifacts;
+- separate standard development work from administrator maintenance;
+- install remote access in phases;
+- validate before exposing;
+- keep public writing useful without leaking private details.
+
+The result is less dramatic than "one command builds a workstation." It is also much safer. A real AI engineering workstation should be boring in the best possible way: explicit, auditable, recoverable, and careful about what it reveals.
+
+## SEO
+
+- **SEO title:** Build a Secure Windows AI Workstation with Git, OpenSSH, and Human Approval Gates
+- **Meta description:** A privacy-safe case study on building a Windows AI engineering workstation with Git, PowerShell, OpenSSH, least privilege, DISM/CBS troubleshooting, and human-approved security gates.
+- **URL slug:** `secure-windows-ai-workstation-git-openssh-human-approval`
+
+## Tags
+
+Windows, OpenSSH, DevOps, AI Engineering, Cybersecurity

@@ -2,5 +2,7 @@
 
 ## Unreleased
 
-- 建立 Phase 1 repository 結構、Secret 防護、ADR 與驗證腳本。
-- Phase 3：新增 OpenSSH DISM/CBS 唯讀診斷腳本；安裝腳本在 pending servicing 時預設拒絕重跑。
+- Created the Phase 1 repository structure, secret-protection checks, ADRs, and validation scripts.
+- Added Phase 3 OpenSSH DISM/CBS read-only diagnostics.
+- Kept installation scripts conservative when Windows servicing appears pending.
+- Converted public-facing documentation to English for the public GitHub repository.

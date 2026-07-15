@@ -1,5 +1,9 @@
-# ADR-004: Git as Source of Truth
+# ADR-004: Use Git as the Source of Truth
 
-Status: Accepted
+## Decision
 
-非敏感設定、腳本、決策與操作文件以 Git 為唯一真實來源。手動修改若要保留，必須回寫 repository 並接受 review。
+Git stores documentation, scripts, ADRs, examples, and validation records.
+
+## Rationale
+
+The workstation must be reproducible and auditable. Git history records what changed and why, while `.gitignore` and validation scripts prevent secrets and runtime artifacts from being tracked.

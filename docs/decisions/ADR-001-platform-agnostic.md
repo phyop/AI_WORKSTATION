@@ -1,5 +1,9 @@
-# ADR-001: Platform Agnostic
+# ADR-001: Keep the Workstation Pattern Platform-Agnostic
 
-Status: Accepted
+## Decision
 
-工作流程與文件以 Windows、macOS、Linux 可替換為原則；平台專屬實作分置於 `bootstrap/<platform>/`，不讓核心架構依賴單一作業系統。
+The workstation architecture must separate platform-neutral policy from platform-specific bootstrap scripts.
+
+## Rationale
+
+Windows is the first implementation target, but the security model should also apply to macOS and Linux. Shared rules live in documentation and ADRs; operating-system details live under `bootstrap/<platform>/`.

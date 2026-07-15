@@ -1,18 +1,41 @@
 # Roadmap
 
-來源：`AI_WORKSTATION_V1_IMPLEMENTATION_PLAN.md`。
+## Phase 0: Inventory
 
-- [ ] Phase 0：盤點與架構決策
-- [x] Phase 1：建立 Git Repository 基礎結構
-- [ ] Phase 2：主機基礎設定（進行中：電源、時區、時間同步與非管理員帳號已完成；帳號首次登入及散熱條件待驗證；裝置名稱以 `<host>` 表示）
-- [ ] Phase 3：SSH Server（進行中：Capability 已安裝，`sshd` 已為 Running／Automatic；入站防火牆保持停用，等待 Phase 4 Public Key、本機 Key 登入與重啟驗收）
-- [ ] Phase 4：SSH Key 與 1Password
-- [ ] Phase 5：手機 SSH Client
-- [ ] Phase 6：VPN Overlay
-- [ ] Phase 7：Git 與 GitHub
-- [ ] Phase 8：Python 開發環境
-- [ ] Phase 9：Codex CLI
-- [ ] Phase 10：鎖定畫面與長時間運作
-- [ ] Phase 11：安全加固
+- Record privacy-safe operating system, hardware, power, and time-service facts.
+- Avoid real hostnames, account names, IP addresses, serial numbers, and raw logs.
 
-Phase 1 的完成狀態須以 `tests/verify-repository.ps1` 驗證結果為準。
+## Phase 1: Repository Baseline
+
+- Keep documentation, scripts, ADRs, and validation notes in Git.
+- Keep credentials and runtime state out of Git.
+- Verify ignore rules with tests.
+
+## Phase 2: Local Safety Baseline
+
+- Configure time synchronization.
+- Create a dedicated standard user for development work.
+- Keep administrator access separate for installation and recovery.
+
+## Phase 3: OpenSSH Rollout
+
+- Install OpenSSH Server.
+- Validate local service state and protocol handshake.
+- Keep inbound firewall exposure closed until public-key authentication and network boundaries are ready.
+
+## Phase 4: Key-Based Access
+
+- Generate and store SSH private keys outside Git.
+- Install public keys for the standard user.
+- Restrict password authentication after key login succeeds.
+
+## Phase 5: Private Remote Access
+
+- Add VPN or private overlay access.
+- Limit SSH exposure to trusted network sources.
+- Validate mobile and remote workflows.
+
+## Phase 6: Development Toolchain
+
+- Install Git, Python, Codex, editors, and project-specific tools.
+- Document repeatable setup and recovery steps.

@@ -1,5 +1,9 @@
-# ADR-002: Vendor Neutral
+# ADR-002: Stay Vendor-Neutral Where Practical
 
-Status: Accepted
+## Decision
 
-介面、資料與復原程序保持可匯出、可替換。可以選用供應商服務，但核心文件不得把單一供應商當成不可替代的架構前提。
+The repository documents concepts, boundaries, and scripts without depending on a single remote-access, editor, or AI vendor.
+
+## Rationale
+
+Vendor-neutral documentation keeps the workstation reproducible. Specific products can be added behind the same secret-management, approval, and validation gates.

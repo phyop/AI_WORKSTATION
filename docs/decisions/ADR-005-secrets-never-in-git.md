@@ -1,5 +1,9 @@
-# ADR-005: Secrets Never in Git
+# ADR-005: Never Store Secrets in Git
 
-Status: Accepted
+## Decision
 
-Private Key、Token、密碼、正式憑證與真實 `.env` 永不提交。Repository 只保存範本、變數名稱與 Secret Manager 的非敏感 metadata。
+Private keys, tokens, OAuth files, cookies, `.env` files, and runtime reports must stay outside Git.
+
+## Rationale
+
+Private repositories are confidential storage, not secret storage. Public repositories require an even stricter standard. Commit only examples and placeholders.

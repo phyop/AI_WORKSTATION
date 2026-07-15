@@ -1,5 +1,9 @@
-# ADR-007: VPN-first Remote Access
+# ADR-007: Prefer VPN-First Remote Access
 
-Status: Accepted
+## Decision
 
-遠端 SSH 僅經核准的 VPN Overlay 網路提供，不直接把路由器 SSH Port 暴露至 Internet；再以 Public Key 與 ACL 實作縱深防禦。
+SSH should be reachable only through a VPN, private overlay, or trusted network boundary before any broader exposure is considered.
+
+## Rationale
+
+Remote access is useful only when its blast radius is controlled. VPN-first access reduces public attack surface while still supporting mobile and remote workflows.

@@ -1,5 +1,9 @@
-# ADR-003: Agent Pool
+# ADR-003: Treat Agents as Scoped Operators
 
-Status: Accepted
+## Decision
 
-Agent 依任務取得有限範圍與最小權限；工作目錄、憑證與提交責任可隔離，並由人員協調與審核高風險操作。
+AI agents should operate in scoped project workspaces and should not receive administrator privileges by default.
+
+## Rationale
+
+Agent tooling can accelerate setup, documentation, validation, and troubleshooting. It should not bypass human approval for accounts, credentials, firewall rules, or publication side effects.

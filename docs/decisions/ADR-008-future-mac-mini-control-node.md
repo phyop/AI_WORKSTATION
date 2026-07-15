@@ -1,5 +1,9 @@
-# ADR-008: Future Mac mini Control Node
+# ADR-008: Leave Room for a Future Control Node
 
-Status: Accepted
+## Decision
 
-V1 不依賴 Mac mini，但保留未來加入控制節點的能力。加入時需沿用既有信任邊界、Agent 隔離與 Git-based 重建流程。
+The design should allow a future always-on control node, such as a small desktop or mini server, without changing the current workstation safety model.
+
+## Rationale
+
+A control node can later host scheduling, monitoring, or agent orchestration. It must inherit the same least-privilege, secret-management, and audit principles.
