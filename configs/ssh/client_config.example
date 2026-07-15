@@ -1,0 +1,8 @@
+# Client-side alias. Replace HostName only after the SSH Server/VPN address is known.
+Host ai_SSH_Client_260712
+    HostName <host>
+    User ai_non_Admin_260712
+    IdentityFile ~/.ssh/id_ed25519_ai_workstation
+    IdentitiesOnly yes
+    ServerAliveInterval 30
+    ServerAliveCountMax 3
