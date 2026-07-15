@@ -3,8 +3,8 @@
 ## Identity
 
 - Computer name: `<host>`
-- Local standard user: `ai_non_Admin_260712`
-- SSH Client alias: `ai_SSH_Client_260712`
+- Local standard user: `ai_standard_user`
+- SSH Client alias: `ai_ssh_client`
 - Administrator account remains the installation, maintenance, and recovery path.
 
 The standard user is reserved for SSH, Git, Python, Codex, and routine development. It must not be added to the local Administrators group.

@@ -8,8 +8,8 @@ Use Codex in both the administrator profile and the dedicated standard-user prof
 
 - Computer name: `<host>`
 - Administrator profile: installation, system maintenance, and recovery only
-- Standard profile: `ai_non_Admin_260712`
-- SSH display alias: `ai_SSH_Client_260712`
+- Standard profile: `ai_standard_user`
+- SSH display alias: `ai_ssh_client`
 
 ## Security boundary
 
@@ -19,7 +19,7 @@ Do not run Codex as a privileged cross-account service and do not store the stan
 
 ## One-time standard-profile setup
 
-1. Sign in to `ai_non_Admin_260712`.
+1. Sign in to `ai_standard_user`.
 2. On the Public Desktop, double-click `Setup AI Standard User Tools`.
 3. Sign in to 1Password once.
 4. Install the official OpenAI Codex app from the Microsoft Store window opened by the setup.
@@ -29,10 +29,10 @@ The setup script refuses to run under another username or with administrator pri
 
 ## Daily operation after Phase 4
 
-Create a dedicated local SSH key and authorize it only for `ai_non_Admin_260712`. Once key authentication is verified, the current Codex session can execute standard-user work through localhost SSH:
+Create a dedicated local SSH key and authorize it only for `ai_standard_user`. Once key authentication is verified, the current Codex session can execute standard-user work through localhost SSH:
 
 ```powershell
-ssh ai_non_Admin_260712@127.0.0.1
+ssh ai_standard_user@127.0.0.1
 ```
 
 This avoids Windows sign-out/sign-in for terminal work while preserving the least-privilege boundary. GUI-only authentication prompts may still require a one-time interaction in the standard profile.

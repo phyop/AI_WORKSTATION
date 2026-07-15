@@ -2,7 +2,7 @@
 param()
 
 $ErrorActionPreference = 'Stop'
-$expectedUser = 'ai_non_Admin_260712'
+$expectedUser = 'ai_standard_user'
 
 if ($env:USERNAME -ne $expectedUser) {
     Write-Host "This setup must be run while signed in as $expectedUser." -ForegroundColor Yellow

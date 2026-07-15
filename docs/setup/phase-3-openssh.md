@@ -20,7 +20,7 @@ See `docs/troubleshooting/openssh-capability-stuck.md` for the historical instal
 
 ## Safe rollout
 
-1. Complete the first interactive sign-in for `ai_non_Admin_260712`.
+1. Complete the first interactive sign-in for `ai_standard_user`.
 2. Install and verify the dedicated SSH public key in Phase 4.
 3. Harden `sshd_config` and disable password login.
 4. Enable only the scoped inbound firewall rule after key verification.

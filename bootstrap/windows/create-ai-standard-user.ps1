@@ -2,7 +2,7 @@
 [CmdletBinding()]
 param(
   [ValidatePattern('^[A-Za-z0-9_-]{1,20}$')]
-  [string]$UserName = 'ai_non_Admin_260712',
+  [string]$UserName = 'ai_standard_user',
   [string]$FullName = 'AI Workstation Standard User'
 )
 
