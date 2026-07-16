@@ -1,13 +1,5 @@
 # Building a Secure Windows AI Workstation with Git, OpenSSH, and Human Approval Gates
 
-## Title options
-
-1. Building a Secure Windows AI Workstation with Git, OpenSSH, and Human Approval Gates
-2. From Laptop to AI Workstation: A Privacy-Safe Windows Engineering Setup
-3. OpenSSH, DISM, and Git: Building a Remote AI Engineering Workstation Safely
-4. Why an AI Workstation Needs Security Gates Before Remote Access
-5. Turning a Windows Laptop into a Reproducible AI Engineering Environment
-
 ## The starting point
 
 The project began with a simple goal: make a Windows laptop usable as a remote AI engineering workstation. At first glance, that sounds like a tooling checklist. Install Git, install Python, enable OpenSSH, add an editor, and connect from another device.
@@ -112,13 +104,3 @@ The public repository demonstrates a reusable pattern:
 - keep public writing useful without leaking private details.
 
 The result is less dramatic than "one command builds a workstation." It is also much safer. A real AI engineering workstation should be boring in the best possible way: explicit, auditable, recoverable, and careful about what it reveals.
-
-## SEO
-
-- **SEO title:** Build a Secure Windows AI Workstation with Git, OpenSSH, and Human Approval Gates
-- **Meta description:** A privacy-safe case study on building a Windows AI engineering workstation with Git, PowerShell, OpenSSH, least privilege, DISM/CBS troubleshooting, and human-approved security gates.
-- **URL slug:** `secure-windows-ai-workstation-git-openssh-human-approval`
-
-## Tags
-
-Windows, OpenSSH, DevOps, AI Engineering, Cybersecurity

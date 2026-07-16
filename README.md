@@ -8,6 +8,18 @@ This repository documents a staged workstation build. The goal is not to expose 
 
 The public repository intentionally uses placeholders such as `<host>`, `<standard-user>`, `<project-root>`, and `<user-home>`. It does not publish real hostnames, account names, IP addresses, email addresses, SSH fingerprints, private keys, raw logs, or local filesystem paths.
 
+## What This Demonstrates
+
+This project is a workstation architecture and operations record, not a one-click installer. It demonstrates how to turn a personal machine into a more reliable AI engineering environment by making each risky boundary explicit before automation expands:
+
+- identity and account separation before remote control;
+- Git as the source of truth for non-sensitive configuration;
+- staged OpenSSH rollout instead of direct exposure;
+- privacy-safe documentation that remains useful to other engineers;
+- human approval gates for administrator actions and security-sensitive changes.
+
+For hiring managers and engineering reviewers, the repository is intended to show systems thinking, operational discipline, documentation quality, and security-aware AI tooling.
+
 ## Features
 
 - Git-backed documentation and configuration records
@@ -66,6 +78,16 @@ flowchart TD
 3. Use `docs/setup/phase-0-inventory.md` to record only privacy-safe inventory facts.
 4. Run Windows bootstrap scripts only after reviewing their scope.
 5. Keep secrets in a secret manager or local protected storage, never in Git.
+
+## Validation
+
+The repository includes lightweight checks that support safe publication and repeatable setup:
+
+- secret hygiene fixtures under `tests/`;
+- documentation boundaries in `SECURITY.md`;
+- architecture decisions under `docs/decisions/`;
+- staged setup records under `docs/setup/`;
+- troubleshooting notes that preserve lessons without publishing raw local logs.
 
 ## Result
 
