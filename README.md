@@ -101,7 +101,7 @@ The current public record shows a workstation design with clear safety gates:
 
 ## Related Publication
 
-- [Building a Secure Windows AI Workstation with Git, OpenSSH, and Human Approval Gates](https://medium.com/@seek1andfind2/%E6%88%91%E5%A6%82%E4%BD%95%E6%8A%8A%E4%B8%80%E5%8F%B0-windows-%E7%AD%86%E9%9B%BB-%E9%80%90%E6%AD%A5%E8%AE%8A%E6%88%90%E5%AE%89%E5%85%A8%E7%9A%84-ai-%E5%B7%A5%E7%A8%8B%E5%B7%A5%E4%BD%9C%E7%AB%99-5c9c646a0ffc)
+- [Building a Secure Windows AI Workstation with Git, OpenSSH, and Human Approval Gates](https://medium.com/p/5c9c646a0ffc)
 
 ## Future Improvements
 
