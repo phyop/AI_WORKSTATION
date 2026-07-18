@@ -54,6 +54,8 @@ ssh ai_SSH_Client_260712 "git --version"
 
 ## Remaining Phase 4 work
 
+- 1Password App `8.12.28.25` is installed for the standard account.
+- 1Password CLI `2.34.1` is installed for the standard account.
 - Create the separate mobile-to-workstation key in 1Password.
 - Record its public fingerprint and non-secret inventory metadata.
 - Verify recovery and annual review procedures.

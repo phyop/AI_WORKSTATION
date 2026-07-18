@@ -1,0 +1,27 @@
+keys:
+  - name: mobile-to-ai-node
+    purpose: ssh-login
+    owner_role: workstation-owner
+    key_type: ed25519
+    private_key_location: 1password
+    public_key_installed_on:
+      - ai-workstation-standard-account
+    source_restriction: vpn-or-approved-client-network
+    created_at: YYYY-MM-DD
+    last_verified_at: YYYY-MM-DD
+    rotation_policy: review-annually-and-rotate-on-device-loss
+    status: planned
+
+  - name: local-codex-to-standard-user
+    purpose: localhost-automation
+    owner_role: maintenance-profile
+    key_type: ed25519
+    private_key_location: windows-acl-protected-local-file
+    public_key_fingerprint: SHA256:b4EPQFbnEqAEQyCVZFE7Ea3NKX5LvixjHhMNeRqEU5k
+    public_key_installed_on:
+      - ai-workstation-standard-account
+    source_restriction: localhost-only
+    created_at: 2026-07-18
+    last_verified_at: 2026-07-18
+    rotation_policy: review-annually-and-rotate-on-profile-compromise
+    status: active
