@@ -6,11 +6,12 @@ keys:
     private_key_location: 1password
     public_key_installed_on:
       - ai-workstation-standard-account
-    source_restriction: vpn-or-approved-client-network
-    created_at: YYYY-MM-DD
-    last_verified_at: YYYY-MM-DD
+    public_key_fingerprint: SHA256:e6N/aKOEXIry1oKBuuboL5feuL9aJfZMtjiNNNryMX8
+    source_restriction: enforced-by-vpn-and-firewall-before-remote-use
+    created_at: 2026-07-20
+    last_verified_at: pending-first-client-login
     rotation_policy: review-annually-and-rotate-on-device-loss
-    status: planned
+    status: installed-unverified
 
   - name: local-codex-to-standard-user
     purpose: localhost-automation

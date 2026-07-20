@@ -56,7 +56,9 @@ ssh ai_SSH_Client_260712 "git --version"
 
 - 1Password App `8.12.28.25` is installed for the standard account.
 - 1Password CLI `2.34.1` is installed for the standard account.
-- Create the separate mobile-to-workstation key in 1Password.
-- Record its public fingerprint and non-secret inventory metadata.
+- The separate `mobile-to-ai-node` Ed25519 key is stored in 1Password.
+- Its public key is installed for the standard account with forwarding disabled.
+- Its fingerprint is recorded in the non-secret key inventory.
+- Verify the first login from the intended client after the VPN/firewall path is configured.
 - Verify recovery and annual review procedures.
 - Keep private keys and Windows credentials out of Git.
